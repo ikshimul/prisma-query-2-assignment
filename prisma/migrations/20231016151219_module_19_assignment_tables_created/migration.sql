@@ -1,0 +1,134 @@
+-- CreateTable
+CREATE TABLE `categories` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `title` VARCHAR(100) NOT NULL,
+    `metaTitle` VARCHAR(100) NULL,
+    `slug` VARCHAR(100) NOT NULL,
+    `content` VARCHAR(100) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `users` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `firstName` VARCHAR(100) NOT NULL,
+    `middleName` VARCHAR(100) NULL,
+    `lastName` VARCHAR(100) NULL,
+    `mobile` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `password` VARCHAR(100) NOT NULL,
+    `registeredAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `lastLogin` DATETIME(3) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `products` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NULL,
+    `firstName` VARCHAR(100) NOT NULL,
+    `metaTitle` VARCHAR(100) NULL,
+    `slug` VARCHAR(100) NULL,
+    `summary` VARCHAR(100) NULL,
+    `price` FLOAT NOT NULL DEFAULT 0,
+    `discount_price` FLOAT NOT NULL DEFAULT 0,
+    `publishedAt` DATETIME(3) NULL,
+    `startsAt` DATETIME(3) NULL,
+    `endsAt` DATETIME(3) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `product_meta` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `product_id` BIGINT UNSIGNED NOT NULL,
+    `key` VARCHAR(100) NOT NULL,
+    `content` VARCHAR(100) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `product_review` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `product_id` BIGINT UNSIGNED NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `rating` VARCHAR(100) NULL,
+    `content` VARCHAR(100) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `carts` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `sessionId` VARCHAR(100) NULL,
+    `token` VARCHAR(100) NULL,
+    `status` VARCHAR(100) NULL,
+    `firstName` VARCHAR(100) NOT NULL,
+    `middleName` VARCHAR(100) NULL,
+    `lastName` VARCHAR(100) NULL,
+    `mobile` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `city` VARCHAR(100) NULL,
+    `country` VARCHAR(100) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `orders` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` BIGINT UNSIGNED NULL,
+    `title` VARCHAR(100) NOT NULL,
+    `token` VARCHAR(100) NULL,
+    `subTotal` MEDIUMINT NOT NULL DEFAULT 0,
+    `ItemDiscount` MEDIUMINT NOT NULL DEFAULT 0,
+    `tax` MEDIUMINT NOT NULL DEFAULT 0,
+    `total` MEDIUMINT NOT NULL DEFAULT 0,
+    `discount` MEDIUMINT NOT NULL DEFAULT 0,
+    `grandTotal` MEDIUMINT NOT NULL DEFAULT 0,
+    `firstName` VARCHAR(100) NOT NULL,
+    `middleName` VARCHAR(100) NULL,
+    `lastName` VARCHAR(100) NULL,
+    `mobile` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `city` VARCHAR(100) NULL,
+    `country` VARCHAR(100) NULL,
+    `createAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `updateAt` TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `products` ADD CONSTRAINT `products_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `product_meta` ADD CONSTRAINT `product_meta_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `product_review` ADD CONSTRAINT `product_review_product_id_fkey` FOREIGN KEY (`product_id`) REFERENCES `products`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `carts` ADD CONSTRAINT `carts_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `orders` ADD CONSTRAINT `orders_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

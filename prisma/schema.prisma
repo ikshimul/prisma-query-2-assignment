@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  title     String   @db.VarChar(100)
+  metaTitle String?  @db.VarChar(100)
+  slug      String   @db.VarChar(100)
+  content   String?  @db.VarChar(100)
+  createAt  DateTime @default(now()) @db.Timestamp(0)
+  updateAt  DateTime @default(now()) @updatedAt @db.Timestamp(0)
+}
+
+model users {
+  id           BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName    String     @db.VarChar(100)
+  middleName   String?    @db.VarChar(100)
+  lastName     String?    @db.VarChar(100)
+  mobile       String     @db.VarChar(100)
+  email        String     @db.VarChar(100)
+  password     String     @db.VarChar(100)
+  admin        Int        @db.TinyInt
+  registeredAt DateTime   @default(now()) @db.Timestamp(0)
+  lastLogin    DateTime?
+  createAt     DateTime   @default(now()) @db.Timestamp(0)
+  updateAt     DateTime   @default(now()) @updatedAt @db.Timestamp(0)
+  products     products[]
+  carts        carts[]
+  orders       orders[]
+}
+
+model products {
+  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id        BigInt?   @db.UnsignedBigInt
+  firstName      String    @db.VarChar(100)
+  metaTitle      String?   @db.VarChar(100)
+  slug           String?   @db.VarChar(100)
+  summary        String?   @db.VarChar(100)
+  price          Float     @default(0) @db.Float
+  discount_price Float     @default(0) @db.Float
+  publishedAt    DateTime?
+  startsAt       DateTime?
+  endsAt         DateTime?
+  createAt       DateTime  @default(now()) @db.Timestamp(0)
+  updateAt       DateTime  @default(now()) @updatedAt @db.Timestamp(0)
+
+  users          users?           @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  product_meta   product_meta[]
+  product_review product_review[]
+}
+
+model product_meta {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  product_id BigInt   @db.UnsignedBigInt
+  key        String   @db.VarChar(100)
+  content    String?  @db.VarChar(100)
+  createAt   DateTime @default(now()) @db.Timestamp(0)
+  updateAt   DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  products products @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model product_review {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  product_id BigInt?  @db.UnsignedBigInt
+  title      String   @db.VarChar(100)
+  rating     String?  @db.VarChar(100)
+  content    String?  @db.VarChar(100)
+  createAt   DateTime @default(now()) @db.Timestamp(0)
+  updateAt   DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  products products? @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model carts {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id    BigInt?  @db.UnsignedBigInt
+  title      String   @db.VarChar(100)
+  sessionId  String?  @db.VarChar(100)
+  token      String?  @db.VarChar(100)
+  status     String?  @db.VarChar(100)
+  firstName  String   @db.VarChar(100)
+  middleName String?  @db.VarChar(100)
+  lastName   String?  @db.VarChar(100)
+  mobile     String   @db.VarChar(100)
+  email      String   @db.VarChar(100)
+  city       String?  @db.VarChar(100)
+  country    String?  @db.VarChar(100)
+  createAt   DateTime @default(now()) @db.Timestamp(0)
+  updateAt   DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  users users? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
+
+model orders {
+  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  user_id      BigInt?  @db.UnsignedBigInt
+  title        String   @db.VarChar(100)
+  token        String?  @db.VarChar(100)
+  subTotal     Int      @default(0) @db.MediumInt
+  ItemDiscount Int      @default(0) @db.MediumInt
+  tax          Int      @default(0) @db.MediumInt
+  total        Int      @default(0) @db.MediumInt
+  discount     Int      @default(0) @db.MediumInt
+  grandTotal   Int      @default(0) @db.MediumInt
+  firstName    String   @db.VarChar(100)
+  middleName   String?  @db.VarChar(100)
+  lastName     String?  @db.VarChar(100)
+  mobile       String   @db.VarChar(100)
+  email        String   @db.VarChar(100)
+  city         String?  @db.VarChar(100)
+  country      String?  @db.VarChar(100)
+  createAt     DateTime @default(now()) @db.Timestamp(0)
+  updateAt     DateTime @default(now()) @updatedAt @db.Timestamp(0)
+
+  users users? @relation(fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Cascade)
+}
