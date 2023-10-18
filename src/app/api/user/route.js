@@ -21,7 +21,7 @@ export async function POST(req, res) {
   };
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.users.create({
+    let createUser = prisma.users.create({
       data: {
         firstName: "Inzamamul",
         middleName: "Karim",
@@ -29,8 +29,10 @@ export async function POST(req, res) {
         mobile: "01737242772",
         email: "ikshimuluits@gmail.com",
         password: "123",
+        admin: 1,
       },
     });
+    const result = await prisma.$transaction([createUser]);
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });
@@ -43,7 +45,7 @@ export async function PUT(req, res) {
   };
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.users.update({
+    let updateUser = prisma.users.update({
       where: {
         id: 1,
       },
@@ -56,6 +58,7 @@ export async function PUT(req, res) {
         password: "123",
       },
     });
+    const result = await prisma.$transaction([updateUser]);
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });

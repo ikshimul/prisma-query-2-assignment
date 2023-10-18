@@ -8,7 +8,11 @@ export async function GET() {
 
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.carts.findMany();
+    // let result = await prisma.carts.findMany();
+    const result = await prisma.carts.groupBy({
+      by: ["user_id"],
+      _count: { email: true },
+    });
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });
@@ -21,7 +25,7 @@ export async function POST(req, res) {
   };
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.carts.create({
+    let createCart = prisma.carts.create({
       data: {
         users: {
           connect: {
@@ -40,6 +44,7 @@ export async function POST(req, res) {
         country: "BD",
       },
     });
+    const result = await prisma.$transaction([createCart]);
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });
