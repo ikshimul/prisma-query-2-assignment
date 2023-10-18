@@ -50,3 +50,55 @@ export async function POST(req, res) {
     return NextResponse.json({ status: "fail", data: error.toString() });
   }
 }
+
+export async function PUT(req, res) {
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
+  try {
+    const prisma = new PrismaClient();
+    let updateOrder = prisma.carts.update({
+      where: {
+        id: 1,
+      },
+      data: {
+        users: {
+          connect: {
+            id: 1,
+          },
+        },
+        title: "update test",
+        sessionId: "sjdhasdh-sakdhasd-asdjoaisds",
+        token: "sdsugdahsdiusmndjasdiskydrw87elaspjdsmbsdjt",
+        firstName: "Inzamamul",
+        middleName: "karim",
+        lastName: "shimul",
+        mobile: "01737242772",
+        email: "ik@gmail.com",
+        city: "Dhaka",
+        country: "BD",
+      },
+    });
+    const result = await prisma.$transaction([updateOrder]);
+    return NextResponse.json({ status: "success", data: result });
+  } catch (error) {
+    return NextResponse.json({ status: "fail", data: error.toString() });
+  }
+}
+
+export async function DELETE(req, res) {
+  BigInt.prototype.toJSON = function () {
+    return this.toString();
+  };
+  try {
+    const prisma = new PrismaClient();
+    let result = await prisma.carts.delete({
+      where: {
+        id: 1,
+      },
+    });
+    return NextResponse.json({ status: "success", data: result });
+  } catch (e) {
+    return NextResponse.json({ status: "fail", data: e.toString() });
+  }
+}
