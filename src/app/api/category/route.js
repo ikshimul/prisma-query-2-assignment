@@ -21,14 +21,15 @@ export async function POST(req, res) {
   };
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.categories.create({
+    let createCategory = prisma.categories.create({
       data: {
-        title: "Mobile",
-        metaTitle: "Smart Phone",
-        slug: "mobile",
-        content: "Smart Phone",
+        title: "Apple",
+        metaTitle: "Apple Smart Phone",
+        slug: "apple",
+        content: "Apple Smart Phone",
       },
     });
+    const result = await prisma.$transaction([createCategory]);
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });
@@ -41,7 +42,7 @@ export async function PUT(req, res) {
   };
   try {
     const prisma = new PrismaClient();
-    let result = await prisma.categories.update({
+    let updateCategory = prisma.categories.update({
       where: {
         id: 1,
       },
@@ -52,6 +53,7 @@ export async function PUT(req, res) {
         content: "macbook",
       },
     });
+    const result = await prisma.$transaction([updateCategory]);
     return NextResponse.json({ status: "success", data: result });
   } catch (error) {
     return NextResponse.json({ status: "fail", data: error.toString() });
